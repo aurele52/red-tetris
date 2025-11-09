@@ -1,11 +1,11 @@
-// server/src/game/board.ts
-import type { Board, Kind, Piece, Size } from "./types";
-
-const EMPTY: Kind = 7 as Kind;
+import { Board } from "../type/Board.type";
+import { Kind } from "../type/Kind.type";
+import { Piece } from "../type/Piece.type";
+import { Size } from "../type/Size.type";
 
 export function emptyBoard(size: Size): Board {
   return Array.from({ length: size.height }, () =>
-    Array.from({ length: size.width }, () => EMPTY),
+    Array.from({ length: size.width }, () => 7),
   );
 }
 
@@ -14,7 +14,7 @@ export function inBounds(size: Size, x: number, y: number): boolean {
 }
 
 export function isFree(board: Board, x: number, y: number): boolean {
-  return board[y][x] === EMPTY;
+  return board[y][x] === 7;
 }
 
 export function isOk(size: Size, board: Board, x: number, y: number): boolean {
@@ -22,11 +22,9 @@ export function isOk(size: Size, board: Board, x: number, y: number): boolean {
 }
 
 export function canStay(size: Size, board: Board, piece: Piece): boolean {
-  return piece.shape.every((cell) => {
-    const x = cell.x + piece.x;
-    const y = cell.y + piece.y;
-    return inBounds(size, x, y) && isFree(board, x, y);
-  });
+  return piece.shape.every((cell) =>
+    isOk(size, board, cell.x + piece.x, cell.y + piece.y),
+  );
 }
 
 export function isPartOfPiece(piece: Piece, x: number, y: number): boolean {
@@ -48,15 +46,15 @@ export function removeOneLine(board: Board, line: number): Board {
 }
 
 export function isFullLine(line: Readonly<Kind[]>): boolean {
-  return line.every((cell) => cell !== EMPTY);
+  return line.every((cell) => cell !== 7);
 }
 
 export function isEmptyLine(line: Readonly<Kind[]>): boolean {
-  return line.every((cell) => cell === EMPTY);
+  return line.every((cell) => cell === 7);
 }
 
 export function generateLine(size: Size): Kind[] {
-  return Array.from({ length: size.width }, () => EMPTY) as Kind[];
+  return Array.from({ length: size.width }, () => 7) as Kind[];
 }
 
 export function clearFullLine(size: Size, board: Board): Board {

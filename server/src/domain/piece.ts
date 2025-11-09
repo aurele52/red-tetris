@@ -1,5 +1,7 @@
+import { Dir } from "../type/Dir.type";
+import { Kind } from "../type/Kind.type";
+import { Piece } from "../type/Piece.type";
 import { newShape, rotateShape } from "./shapes";
-import type { Dir, Kind, Piece } from "./types";
 
 export function movePiece(piece: Piece, dx: number, dy: number) {
   return { ...piece, x: piece.x + dx, y: piece.y + dy };

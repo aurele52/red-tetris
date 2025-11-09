@@ -1,75 +1,39 @@
-export type Action = {
-  type:
-    | "MoveLeft"
-    | "MoveRight"
-    | "MoveUp"
-    | "SoftDrop"
-    | "HardDrop"
-    | "RotateCW"
-    | "RotateCCW"
-    | "Tick"
-    | "Spawn"
-    | "LockForDebug"
-    | "ChangeFormForDebug";
-};
+export type Action =
+  | "MoveLeft"
+  | "MoveRight"
+  | "MoveUp"
+  | "SoftDrop"
+  | "HardDrop"
+  | "RotateCW"
+  | "RotateCCW"
+  | "Tick"
+  | "Spawn"
+  | "LockForDebug"
+  | "ChangeFormForDebug";
 
-export const A = {
-  moveLeft(): Action {
-    return { type: "MoveLeft" };
-  },
-  moveRight(): Action {
-    return { type: "MoveRight" };
-  },
-  moveUp(): Action {
-    return { type: "MoveUp" };
-  },
-
-  softDrop(): Action {
-    return { type: "SoftDrop" };
-  },
-  hardDrop(): Action {
-    return { type: "HardDrop" };
-  },
-  rotateCW(): Action {
-    return { type: "RotateCW" };
-  },
-  rotateCCW(): Action {
-    return { type: "RotateCCW" };
-  },
-  lockForDebug(): Action {
-    return { type: "LockForDebug" };
-  },
-  tick(): Action {
-    return { type: "Tick" };
-  },
-  changeFormForDebug(): Action {
-    return { type: "ChangeFormForDebug" };
-  },
-
-  fromKey(key: string): Action | null {
-    switch (key) {
-      case "ArrowLeft":
-        return A.moveLeft();
-      case "ArrowRight":
-        return A.moveRight();
-      case "ArrowDown":
-        return A.softDrop();
-      case "ArrowUp":
-        return A.moveUp();
-      case "x":
-        return A.rotateCW();
-      case "z":
-        return A.rotateCCW();
-      case " ":
-        return A.hardDrop();
-      case "Space":
-        return A.hardDrop();
-      case "v":
-        return A.lockForDebug();
-      case "c":
-        return A.changeFormForDebug();
-      default:
-        return null;
-    }
-  },
-};
+export function fromKey(key: string): Action | null {
+  switch (key) {
+    case "ArrowLeft":
+      return "MoveLeft";
+    case "ArrowRight":
+      return "MoveRight";
+    case "ArrowDown":
+      return "SoftDrop";
+    case "ArrowUp":
+      return "MoveUp";
+    case "x":
+      return "RotateCW";
+    case "z":
+      return "RotateCCW";
+    case " ":
+      return "HardDrop";
+    case "Space":
+      return "HardDrop";
+    case "v":
+      return "LockForDebug";
+    case "c":
+      return "ChangeFormForDebug";
+    default:
+      return null;
+  }
+}

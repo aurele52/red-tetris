@@ -2,7 +2,8 @@ import http from "http";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
-import { GameRoom } from "./game/rooms";
+import { GameRoom } from "./room/rooms";
+import { Action } from "./type/Action.type";
 
 const app = express();
 app.use(cors());
@@ -32,32 +33,17 @@ io.on("connection", (socket) => {
       socket.emit(reason || "room_full", { roomId });
       return;
     }
+    console.log("test", room.snapshot());
     socket.join(roomId);
     socket.data.roomId = roomId;
-    io.to(roomId).emit("room_update", room.snapshot());
-  });
-
-  socket.on("game/tick", () => {
-    const roomId = socket.data.roomId as string | undefined;
-    if (!roomId) return;
-    const room = getRoom(roomId);
-    room.tickDown();
     io.to(roomId).emit("game/state", room.snapshot());
   });
 
-  socket.on("game/move", (dir: "left" | "right") => {
+  socket.on("game/action", (action: Action) => {
     const roomId = socket.data.roomId as string | undefined;
     if (!roomId) return;
     const room = getRoom(roomId);
-    room.move(dir);
-    io.to(roomId).emit("game/state", room.snapshot());
-  });
-
-  socket.on("game/rotate", (dir: "cw" | "ccw") => {
-    const roomId = socket.data.roomId as string | undefined;
-    if (!roomId) return;
-    const room = getRoom(roomId);
-    room.rotate(dir);
+    room.applyAction(action);
     io.to(roomId).emit("game/state", room.snapshot());
   });
 
@@ -74,4 +60,3 @@ const PORT = 4000;
 server.listen(PORT, () => {
   console.log(`Server on http://localhost:${PORT}`);
 });
-
