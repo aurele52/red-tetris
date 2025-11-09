@@ -1,0 +1,11 @@
+{
+  "name": "monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n server,client -c green,blue \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build": "npm --prefix server run build && npm --prefix client run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
