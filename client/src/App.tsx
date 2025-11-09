@@ -4,6 +4,7 @@ import { useKeyboard } from "./ui/hooks/useKeyboard";
 import { fromKey } from "./app/actions";
 import HUD from "./ui/components/HUD";
 import BoardView from "./ui/components/Board";
+import { addPieceBoard } from "./selector";
 import type { GameState } from "./types/GameState.type";
 // import React, { useEffect, useRef, useState } from "react";
 // import Api from "./Api";
@@ -53,7 +54,9 @@ export default function App() {
       {gameState && (
         <div style={{ display: "grid", gap: 12 }}>
           <HUD />
-          <BoardView board={gameState.board} />
+          <BoardView
+            board={addPieceBoard(gameState.board, gameState.activePiece)}
+          />
         </div>
       )}
       {/*<Api />*/}
