@@ -1,62 +1,86 @@
-import http from "http";
+// server.ts (exemple d'intégration Socket.IO)
 import express from "express";
 import { Server } from "socket.io";
-import cors from "cors";
-import { GameRoom } from "./room/rooms";
-import { Action } from "./type/Action.type";
+import { createServer } from "http";
+import { Game } from "./class/Game";
+import { Action } from "./types/types";
 
 const app = express();
-app.use(cors());
-app.get("/", (_req, res) => res.send("OK"));
-
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: ["http://localhost:8081"], methods: ["GET", "POST"] },
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:8081", // ou "*" pour autoriser tout le monde
+    methods: ["GET", "POST"],
+  },
 });
 
-const rooms = new Map<string, GameRoom>();
-function getRoom(id: string) {
-  let r = rooms.get(id);
-  if (!r) {
-    r = new GameRoom(id);
-    rooms.set(id, r);
-  }
-  return r;
-}
+const games = new Map<string, Game>();
 
 io.on("connection", (socket) => {
-  socket.on("join_room", ({ roomId }) => {
-    if (!roomId) return;
-    const room = getRoom(roomId);
-    const { joined, reason } = room.join(socket.id);
-    if (!joined) {
-      socket.emit(reason || "room_full", { roomId });
-      return;
+  console.log("Player connected:", socket.id);
+
+  socket.on("joinGame", ({ gameId, playerName }) => {
+    let game = games.get(gameId);
+
+    if (!game) {
+      game = new Game(gameId, (gameState) =>
+        io.to(gameId).emit("gameState", gameState),
+      );
+      games.set(gameId, game);
     }
-    console.log("test", room.snapshot());
-    socket.join(roomId);
-    socket.data.roomId = roomId;
-    io.to(roomId).emit("game/state", room.snapshot());
+
+    if (game.addPlayer(socket.id, playerName)) {
+      socket.join(gameId);
+      io.to(gameId).emit("gameState", game.getState());
+    } else {
+      socket.emit("error", "Cannot join started game");
+    }
   });
 
-  socket.on("game/action", (action: Action) => {
-    const roomId = socket.data.roomId as string | undefined;
-    if (!roomId) return;
-    const room = getRoom(roomId);
-    room.applyAction(action);
-    io.to(roomId).emit("game/state", room.snapshot());
+  socket.on("startGame", ({ gameId }) => {
+    const game = games.get(gameId);
+    if (game && game.hostId === socket.id) {
+      if (game.start()) {
+        io.to(gameId).emit("gameState", game.getState());
+      }
+    }
+  });
+
+  socket.on(
+    "action",
+    ({ gameId, action }: { gameId: string; action: Action }) => {
+      const game = games.get(gameId);
+      if (game && game.handleAction(socket.id, action)) {
+        io.to(gameId).emit("gameState", game.getState());
+      }
+    },
+  );
+
+  socket.on("restartGame", ({ gameId }) => {
+    const game = games.get(gameId);
+    if (game && game.hostId === socket.id) {
+      if (game.restart()) {
+        io.to(gameId).emit("gameState", game.getState());
+      }
+    }
   });
 
   socket.on("disconnect", () => {
-    const roomId = socket.data.roomId as string | undefined;
-    if (!roomId) return;
-    const room = getRoom(roomId);
-    room.leave(socket.id);
-    io.to(roomId).emit("room_update", room.snapshot());
+    games.forEach((game, gameId) => {
+      if (game.players.has(socket.id)) {
+        game.removePlayer(socket.id);
+
+        if (game.players.size === 0) {
+          games.delete(gameId);
+        } else {
+          io.to(gameId).emit("gameState", game.getState());
+        }
+      }
+    });
   });
 });
 
-const PORT = 4000;
-server.listen(PORT, () => {
-  console.log(`Server on http://localhost:${PORT}`);
+const PORT = process.env.PORT || 3000;
+httpServer.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
