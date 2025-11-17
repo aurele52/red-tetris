@@ -29,7 +29,6 @@ function App() {
       if (state && state.players.length > 1) {
         const alivePlayer = state.players.filter((e) => e.isAlive === true);
         if (alivePlayer.length == 1) setWinner(alivePlayer[0].name);
-        else setWinner(null);
       }
     });
 
@@ -112,7 +111,7 @@ function App() {
   return (
     <div>
       <h1>Tetris Multiplayer</h1>
-      {winner && <>The Winner is {winner}</>}
+      {winner && <>The Last Winner is {winner}</>}
 
       {!joined ? (
         <div>Try Another Url</div>

@@ -122,8 +122,7 @@ export class Game {
   handleAction(playerId, action) {
     if (!this.isStarted) return false;
 
-    const player =
-      this.players[0].id === playerId ? this.players[0] : this.players[1];
+    const player = this.players.find((play) => playerId === play.id);
     if (!player || !player.isAlive || !player.currentPiece) return false;
     let test = applyMove(player, action);
     this.players.forEach((player) => {
