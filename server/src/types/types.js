@@ -1,0 +1,9 @@
+export const KIND_I = 0;
+export const KIND_T = 1;
+export const KIND_O = 2;
+export const KIND_S = 3;
+export const KIND_Z = 4;
+export const KIND_L = 5;
+export const KIND_J = 6;
+export const EMPTY_KIND = 7;
+export const MALUS_KIND = 8;
