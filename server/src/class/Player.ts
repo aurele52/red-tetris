@@ -1,4 +1,3 @@
-// Player.ts
 import { Board, EMPTY_KIND, Kind, PlayerData } from "../types/types";
 import { Piece } from "./Piece";
 
@@ -9,6 +8,8 @@ export class Player {
   currentPiece: Piece | null;
   score: number;
   isAlive: boolean;
+  malus: number;
+  cleared: number;
 
   constructor(id: string, name: string) {
     this.id = id;
@@ -17,6 +18,8 @@ export class Player {
     this.currentPiece = null;
     this.score = 0;
     this.isAlive = true;
+    this.malus = 0;
+    this.cleared = 0;
   }
 
   private createEmptyBoard(): Board {
@@ -28,7 +31,7 @@ export class Player {
   spawnPiece(): void {
     const kinds: Kind[] = [0, 1, 2, 3, 4, 5, 6] as Kind[];
     const randomKind = kinds[Math.floor(Math.random() * kinds.length)];
-    this.currentPiece = new Piece(randomKind);
+    this.currentPiece = new Piece(randomKind, 3, this.malus);
 
     if (this.currentPiece && !this.currentPiece.isValidPosition(this.board)) {
       this.isAlive = false;
@@ -58,6 +61,7 @@ export class Player {
     );
 
     const linesCleared = this.board.length - newBoard.length;
+    this.cleared += linesCleared;
     this.score += linesCleared * 100;
 
     while (newBoard.length < 20) {
@@ -72,6 +76,8 @@ export class Player {
     this.currentPiece = null;
     this.score = 0;
     this.isAlive = true;
+    this.cleared = 0;
+    this.malus = 0;
   }
 
   toData(): PlayerData {
@@ -82,6 +88,7 @@ export class Player {
       isAlive: this.isAlive,
       board: this.board,
       currentPiece: this.currentPiece?.toData() || null,
+      malus: this.malus,
     };
   }
 }

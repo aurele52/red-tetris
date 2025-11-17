@@ -1,4 +1,3 @@
-// Piece.ts
 import { getShapeTemplate, rotateShape } from "../domain/shape";
 import {
   Kind,
@@ -53,11 +52,9 @@ export class Piece {
     );
     newPiece.rotation = ((this.rotation + 1) % 4) as Rotation;
 
-    // Rotation simple (90 degrés horaire)
-    newPiece.shape = rotateShape(this.shape, "cw");
+    newPiece.shape = rotateShape(this.shape, this.kind);
     return newPiece;
   }
-  // realRotate(): Piece {}
 
   getAbsoluteCoords(): Coord[] {
     return this.shape.map((coord) => ({

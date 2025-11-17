@@ -1,10 +1,8 @@
-// Game.ts
 import { Action, Board, PieceData, PlayerData } from "../types/types";
 import { Player } from "./Player";
 import { applyMove } from "../domain/ApplyMove";
-import { Piece } from "./Piece";
 
-type GameState = {
+export type GameState = {
   id: string;
   isStarted: boolean;
   hostId: string | null;
@@ -13,7 +11,7 @@ type GameState = {
 
 export class Game {
   id: string;
-  players: Map<string, Player>;
+  players: Player[];
   hostId: string | null;
   isStarted: boolean;
   gameInterval: any;
@@ -21,7 +19,7 @@ export class Game {
 
   constructor(id: string, broadcastGameState: (gameState: GameState) => void) {
     this.id = id;
-    this.players = new Map();
+    this.players = [];
     this.hostId = null;
     this.isStarted = false;
     this.gameInterval = null;
@@ -30,9 +28,10 @@ export class Game {
 
   addPlayer(playerId: string, playerName: string): boolean {
     if (this.isStarted) return false;
+    if (this.players.length >= 2) return false;
 
     const player = new Player(playerId, playerName);
-    this.players.set(playerId, player);
+    this.players.push(player);
 
     if (!this.hostId) {
       this.hostId = playerId;
@@ -42,20 +41,16 @@ export class Game {
   }
 
   removePlayer(playerId: string): void {
-    this.players.delete(playerId);
-
+    this.players = this.players.filter((player) => player.id !== playerId);
     if (this.hostId === playerId) {
-      const remainingPlayers = Array.from(this.players.keys());
-      this.hostId = remainingPlayers.length > 0 ? remainingPlayers[0] : null;
+      const remainingPlayers = Array.from(this.players);
+      this.hostId = remainingPlayers.length > 0 ? remainingPlayers[0].id : null;
     }
-
-    if (this.players.size === 0) {
-      this.stop();
-    }
+    this.stop();
   }
 
   start(): boolean {
-    if (this.isStarted || this.players.size === 0) return false;
+    if (this.isStarted || this.players.length === 0) return false;
 
     this.isStarted = true;
     this.players.forEach((player) => {
@@ -100,6 +95,12 @@ export class Game {
       } else {
         player.lockPiece();
         player.spawnPiece();
+        const playersArray = Array.from(this.players.values());
+        if (playersArray.length === 2) {
+          const [p0, p1] = playersArray;
+          p0.malus = p1.cleared;
+          p1.malus = p0.cleared;
+        }
       }
     });
 
@@ -110,8 +111,11 @@ export class Game {
     const alivePlayers = Array.from(this.players.values()).filter(
       (p) => p.isAlive,
     );
+    if (this.players.length && alivePlayers.length < 2) {
+      this.stop();
+    }
 
-    if (alivePlayers.length <= 1) {
+    if (alivePlayers.length < 1) {
       this.stop();
     }
   }
@@ -119,7 +123,8 @@ export class Game {
   handleAction(playerId: string, action: Action): boolean {
     if (!this.isStarted) return false;
 
-    const player = this.players.get(playerId);
+    const player =
+      this.players[0].id === playerId ? this.players[0] : this.players[1];
     if (!player || !player.isAlive || !player.currentPiece) return false;
     return applyMove(player, action);
   }

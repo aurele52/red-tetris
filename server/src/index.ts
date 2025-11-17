@@ -1,15 +1,14 @@
-// server.ts (exemple d'intégration Socket.IO)
 import express from "express";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import { Game } from "./class/Game";
 import { Action } from "./types/types";
 
-const app = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
+export const app = express();
+export const httpServer = createServer(app);
+export const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:8081", // ou "*" pour autoriser tout le monde
+    origin: "http://localhost:8081",
     methods: ["GET", "POST"],
   },
 });
@@ -33,7 +32,7 @@ io.on("connection", (socket) => {
       socket.join(gameId);
       io.to(gameId).emit("gameState", game.getState());
     } else {
-      socket.emit("error", "Cannot join started game");
+      socket.emit("error", "Cannot join game server full or started");
     }
   });
 
@@ -67,10 +66,9 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     games.forEach((game, gameId) => {
-      if (game.players.has(socket.id)) {
+      if (game.players.find((player) => socket.id === player.id)) {
         game.removePlayer(socket.id);
-
-        if (game.players.size === 0) {
+        if (game.players.length === 0) {
           games.delete(gameId);
         } else {
           io.to(gameId).emit("gameState", game.getState());
@@ -80,7 +78,12 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
-httpServer.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+export function start(port: number | string = process.env.PORT || 3000) {
+  return httpServer.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
+
+if (require.main === module) {
+  start();
+}
