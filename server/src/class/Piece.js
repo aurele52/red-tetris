@@ -1,5 +1,5 @@
-import { getShapeTemplate, rotateShape } from "../domain/shape";
-import { EMPTY_KIND } from "../types/types";
+import { getShapeTemplate, rotateShape } from "../domain/shape.js";
+import { EMPTY_KIND } from "../types/types.js";
 
 export class Piece {
   kind;

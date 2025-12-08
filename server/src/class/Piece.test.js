@@ -7,9 +7,9 @@ import {
   KIND_J,
   KIND_S,
   KIND_Z,
-} from "../types/types";
-import { getShapeTemplate, rotateShape } from "../domain/shape";
-import { Piece } from "./Piece";
+} from "../types/types.js";
+import { getShapeTemplate, rotateShape } from "../domain/shape.js";
+import { Piece } from "./Piece.js";
 
 jest.mock("../domain/shape", () => ({
   getShapeTemplate: jest.fn(),

@@ -1,5 +1,5 @@
-import { Player } from "./Player";
-import { applyMove } from "../domain/ApplyMove";
+import { Player } from "./Player.js";
+import { applyMove } from "../domain/ApplyMove.js";
 
 // G├®n├®rateur pseudo-al├®atoire bas├® sur une seed
 function createSeededRandom(seed) {

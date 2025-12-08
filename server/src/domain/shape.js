@@ -1,4 +1,4 @@
-import { KIND_I, KIND_O } from "../types/types";
+import { KIND_I, KIND_O } from "../types/types.js";
 
 export function getShapeTemplate(kind) {
   const templates = {

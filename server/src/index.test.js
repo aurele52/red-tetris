@@ -1,5 +1,5 @@
 import { io as Client } from "socket.io-client";
-import { httpServer, io, start } from "./index";
+import { httpServer, io, start } from "./index.js";
 
 describe("Socket.IO Server Tests", () => {
   let serverSocket;

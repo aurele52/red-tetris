@@ -1,7 +1,7 @@
 import express from "express";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import { Game } from "./class/Game";
+import { Game } from "./class/Game.js";
 
 export const app = express();
 export const httpServer = createServer(app);
@@ -80,6 +80,4 @@ export function start(port = process.env.PORT || 3000) {
   });
 }
 
-if (require.main === module) {
-  start();
-}
+start();

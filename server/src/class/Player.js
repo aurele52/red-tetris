@@ -1,5 +1,5 @@
-import { EMPTY_KIND } from "../types/types";
-import { Piece } from "./Piece";
+import { EMPTY_KIND } from "../types/types.js";
+import { Piece } from "./Piece.js";
 
 export class Player {
   id;
