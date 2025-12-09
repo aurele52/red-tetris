@@ -1,9 +1,11 @@
+import { applyMove } from "../domain/ApplyMove.js";
 import { EMPTY_KIND } from "../types/types.js";
 import { Piece } from "./Piece.js";
 
 export class Player {
   id;
   name;
+  game;
   board;
   currentPiece;
   score;
@@ -12,9 +14,10 @@ export class Player {
   cleared;
   random;
 
-  constructor(id, name, random) {
+  constructor(id, name, random, game) {
     this.id = id;
     this.name = name;
+    this.game = game;
     this.board = this.createEmptyBoard();
     this.currentPiece = null;
     this.score = 0;
@@ -31,6 +34,8 @@ export class Player {
   }
 
   spawnPiece() {
+    console.log("in spawn piece");
+
     let kinds = [0, 1, 2, 3, 4, 5, 6];
     this.currentPiece = new Piece(
       kinds[Math.floor(this.random() * kinds.length)],
@@ -44,6 +49,8 @@ export class Player {
   }
 
   lockPiece() {
+    console.log("in lock piece");
+
     if (!this.currentPiece) return;
 
     const newBoard = this.board.map((row) => [...row]);
@@ -71,6 +78,16 @@ export class Player {
 
     while (newBoard.length < 20) {
       newBoard.unshift(Array(10).fill(EMPTY_KIND));
+    }
+    console.log("in clear line");
+
+    if (this.mode === "Expert" && linesCleared > 0) {
+      const opponentIds = this.getOpponentIds(this.id);
+      console.log("in the expert mode iun clear lines");
+      opponentIds.forEach(opponentId => {
+          this.game.handleAction(opponentId, "RotateCW");
+      });
+
     }
 
     this.board = newBoard;

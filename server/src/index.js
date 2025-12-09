@@ -52,7 +52,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("restartGame", ({ gameId, mode }) => {
+  socket.on("restartGame", ({ gameId }) => {
     const game = games.get(gameId);
     if (game && game.hostId === socket.id) {
       if (game.restart()) {

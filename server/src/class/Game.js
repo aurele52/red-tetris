@@ -31,7 +31,7 @@ export class Game {
   addPlayer(playerId, playerName) {
     if (this.isStarted) return false;
 
-    const player = new Player(playerId, playerName, this.randq);
+    const player = new Player(playerId, playerName, this.randq, this);
     this.players.push(player);
 
     if (!this.hostId) {
@@ -149,5 +149,10 @@ export class Game {
       hostId: this.hostId,
       players: [...this.players],
     };
+  }
+
+  getOpponnentIds(currentPlayerId) {
+    return this.players.filter(player => player.id !== currentPlayerId)
+    .map(player => player.id);
   }
 }

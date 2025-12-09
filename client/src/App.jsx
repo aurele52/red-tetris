@@ -56,15 +56,15 @@ function App() {
     }
   }, [socket, joined, gameId, playerName]);
 
-  const handleStart = ( mode ) => {
+  const handleStart = () => {
     if (socket) {
       socket.emit("startGame", { gameId, mode });
     }
   };
 
-  const handleRestart = ( mode ) => {
+  const handleRestart = () => {
     if (socket) {
-      socket.emit("restartGame", { gameId, mode });
+      socket.emit("restartGame", { gameId });
     }
   };
 
