@@ -10,6 +10,7 @@ function App() {
   const [myPlayerId, setMyPlayerId] = useState("");
   const [winner, setWinner] = useState(null);
   const [error, setError] = useState(null);
+  const [mode, setMode] = useState("classic");
 
   const pathParts = window.location.pathname.split("/").filter(Boolean); // enlève les "" au début
   const gameId = pathParts[0];
@@ -55,21 +56,30 @@ function App() {
     }
   }, [socket, joined, gameId, playerName]);
 
-  const handleStart = () => {
+  const handleStart = ( mode ) => {
     if (socket) {
-      socket.emit("startGame", { gameId });
+      socket.emit("startGame", { gameId, mode });
     }
   };
 
-  const handleRestart = () => {
+  const handleRestart = ( mode ) => {
     if (socket) {
-      socket.emit("restartGame", { gameId });
+      socket.emit("restartGame", { gameId, mode });
     }
   };
 
   const handleAction = (action) => {
     if (socket) {
       socket.emit("action", { gameId, action });
+    }
+  };
+
+  const handleMode = () => {
+    if (mode === "classic") {
+      setMode("Expert");
+    }
+    else if (mode === "Expert") {
+      setMode("classic");
     }
   };
 
@@ -125,6 +135,9 @@ function App() {
               <button onClick={handleStart} disabled={gameState?.isStarted}>
                 Start Game
               </button>
+              <button onClick={handleMode}>
+                Choose Mode : {mode}
+              </button>
               <button onClick={handleRestart}>Restart Game</button>
             </div>
           )}
@@ -137,6 +150,7 @@ function App() {
           gameState?.players.map((player) => (
             <div key={player.id}>
               <p>{player.name}</p>
+              <p>{player.score}</p>
               <BoardView
                 board={
                   player.currentPiece

@@ -16,6 +16,7 @@ export class Game {
   isStarted;
   gameInterval;
   broadcastGameState;
+  mode;
 
   constructor(id, broadcastGameState) {
     this.id = id;
@@ -24,6 +25,7 @@ export class Game {
     this.isStarted = false;
     this.gameInterval = null;
     this.broadcastGameState = broadcastGameState;
+    this.mode = "classic";
   }
 
   addPlayer(playerId, playerName) {

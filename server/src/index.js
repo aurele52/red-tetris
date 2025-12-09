@@ -35,9 +35,10 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("startGame", ({ gameId }) => {
+  socket.on("startGame", ({ gameId, mode }) => {
     const game = games.get(gameId);
     if (game && game.hostId === socket.id) {
+      game.mode = mode;
       if (game.start()) {
         io.to(gameId).emit("gameState", game.getState());
       }
@@ -51,7 +52,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("restartGame", ({ gameId }) => {
+  socket.on("restartGame", ({ gameId, mode }) => {
     const game = games.get(gameId);
     if (game && game.hostId === socket.id) {
       if (game.restart()) {
