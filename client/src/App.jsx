@@ -5,9 +5,9 @@ import { addMalusToBoard, addPieceBoard } from "./selector";
 
 function App() {
   const modes = {
-    0:"classic",
-    1:"expert",
-  }
+    0: "classic",
+    1: "expert",
+  };
 
   const [socket, setSocket] = useState(null);
   const [gameState, setGameState] = useState(null);
@@ -82,8 +82,7 @@ function App() {
   const handleMode = () => {
     if (mode === modes[0]) {
       setMode(modes[1]);
-    }
-    else if (mode === modes[1]) {
+    } else if (mode === modes[1]) {
       setMode(modes[0]);
     }
   };
@@ -95,6 +94,11 @@ function App() {
       switch (e.key) {
         case "ArrowLeft":
           handleAction("MoveLeft");
+          e.preventDefault();
+          break;
+        case "S":
+          console.log("S pressed");
+          handleAction("Store");
           e.preventDefault();
           break;
         case "ArrowRight":
@@ -140,9 +144,7 @@ function App() {
               <button onClick={handleStart} disabled={gameState?.isStarted}>
                 Start Game
               </button>
-              <button onClick={handleMode}>
-                Choose Mode : {mode}
-              </button>
+              <button onClick={handleMode}>Choose Mode : {mode}</button>
               <button onClick={handleRestart}>Restart Game</button>
             </div>
           )}

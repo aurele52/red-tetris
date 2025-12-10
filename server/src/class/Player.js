@@ -3,10 +3,10 @@ import { EMPTY_KIND } from "../types/types.js";
 import { Piece } from "./Piece.js";
 
 const debugLevel = {
-  OFF:0,
-  DEBUG:1,
-  FULL:2
-}
+  OFF: 0,
+  DEBUG: 1,
+  FULL: 2,
+};
 
 let toggle = debugLevel.FULL;
 
@@ -20,6 +20,7 @@ export class Player {
   malus;
   cleared;
   random;
+  store;
 
   constructor(id, name, random) {
     this.id = id;
@@ -31,6 +32,29 @@ export class Player {
     this.malus = 0;
     this.cleared = 0;
     this.random = random;
+    this.store = null;
+  }
+
+  store() {
+    console.log("yessssssssssssss");
+    if (!this.store) {
+      this.store = JSON.parse(JSON.stringify(currentPiece));
+      let kinds = [0, 1, 2, 3, 4, 5, 6];
+      this.currentPiece = new Piece(
+        kinds[Math.floor(this.random() * kinds.length)],
+        currentPiece.x,
+        currentPiece.y,
+      );
+      if (this.currentPiece && !this.currentPiece.isValidPosition(this.board)) {
+        this.isAlive = false;
+      }
+    } else {
+      let tmp = JSON.parse(JSON.stringify(this.store));
+      this.store.kind = JSON.parse(JSON.stringify(currentPiece.kind));
+      this.store.shape = JSON.parse(JSON.stringify(currentPiece.shape));
+      this.currentPiece.kind = JSON.parse(JSON.stringify(tmp.kind));
+      this.currentPiece.shape = JSON.parse(JSON.stringify(tmp.shape));
+    }
   }
 
   createEmptyBoard() {
@@ -40,8 +64,7 @@ export class Player {
   }
 
   spawnPiece() {
-    if (toggle == debugLevel.FULL)
-      console.log(this.name + " in spawn piece");
+    if (toggle == debugLevel.FULL) console.log(this.name + " in spawn piece");
 
     let kinds = [0, 1, 2, 3, 4, 5, 6];
     this.currentPiece = new Piece(
@@ -51,13 +74,13 @@ export class Player {
       this.isAlive = false;
     }
   }
+
   setRandom(randq) {
     this.random = randq;
   }
 
   lockPiece() {
-    if (toggle == debugLevel.FULL)
-      console.log(this.name + " in lock piece");
+    if (toggle == debugLevel.FULL) console.log(this.name + " in lock piece");
 
     if (!this.currentPiece) return;
 
@@ -76,8 +99,7 @@ export class Player {
   }
 
   clearLines() {
-    if (toggle == debugLevel.FULL)
-      console.log(this.name + " in clear line");
+    if (toggle == debugLevel.FULL) console.log(this.name + " in clear line");
 
     const newBoard = this.board.filter((row) =>
       row.some((cell) => cell === EMPTY_KIND),

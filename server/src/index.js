@@ -48,6 +48,7 @@ io.on("connection", (socket) => {
 
   socket.on("action", ({ gameId, action }) => {
     const game = games.get(gameId);
+    console.log("recieve " + action);
     if (game && game.handleAction(socket.id, action)) {
       io.to(gameId).emit("gameState", game.getState());
     }

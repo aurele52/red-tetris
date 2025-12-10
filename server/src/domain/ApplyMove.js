@@ -2,6 +2,9 @@ export function applyMove(player, action) {
   let newPiece;
   if (!player.currentPiece) return false;
   switch (action) {
+    case "Store":
+      console.log("store");
+      player.store();
     case "MoveLeft":
       newPiece = player.currentPiece.moveLeft();
       break;
