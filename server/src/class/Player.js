@@ -21,6 +21,7 @@ export class Player {
   cleared;
   random;
   store;
+  totScore;
 
   constructor(id, name, random) {
     this.id = id;
@@ -33,6 +34,7 @@ export class Player {
     this.cleared = 0;
     this.random = random;
     this.store = null;
+    this.totScore = 0;
   }
 
   store() {

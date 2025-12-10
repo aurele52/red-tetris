@@ -120,8 +120,12 @@ export class Game {
     const alivePlayers = Array.from(this.players.values()).filter(
       (p) => p.isAlive,
     );
-    if (alivePlayers.length < 1) {
+    if (alivePlayers.length < 1 || (alivePlayers.length === 1 && this.players.length > 1)) {
       this.stop();
+      if (alivePlayers.length === 1) {
+        let toChange = this.players.findIndex((p) => (p.id === alivePlayers[0].id))
+        alivePlayers[toChange].totScore += 1;
+      }
     }
   }
 
