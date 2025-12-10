@@ -18,3 +18,7 @@ export function malusRows(malus) {
 export function addMalusToBoard(board, malus) {
   return [...board.filter((row, rowI) => rowI >= malus), ...malusRows(malus)];
 }
+
+export function addRotateMalus(board, rotateMalus) {
+  
+}

@@ -13,7 +13,6 @@ let toggle = debugLevel.FULL;
 export class Player {
   id;
   name;
-  game;
   board;
   currentPiece;
   score;
@@ -21,7 +20,7 @@ export class Player {
   malus;
   cleared;
   random;
-
+  rotateMalus;
 
   constructor(id, name, random) {
     this.id = id;
@@ -33,6 +32,7 @@ export class Player {
     this.malus = 0;
     this.cleared = 0;
     this.random = random;
+    this.rotateMalus = false;
   }
 
   createEmptyBoard() {
@@ -84,25 +84,14 @@ export class Player {
     const newBoard = this.board.filter((row) =>
       row.some((cell) => cell === EMPTY_KIND),
     );
-
     const linesCleared = this.board.length - newBoard.length;
     this.cleared += linesCleared;
+
     this.score += linesCleared * 100;
 
     while (newBoard.length < 20) {
       newBoard.unshift(Array(10).fill(EMPTY_KIND));
     }
-
-
-    // if (this.mode === "Expert") {
-    //   const opponentIds = this.getOpponentIds(this.id);
-    //   console.log("in the expert mode iun clear lines");
-    //   opponentIds.forEach(opponentId => {
-    //       this.game.handleAction(opponentId, "RotateCW");
-    //   });
-
-    // }
-
     this.board = newBoard;
   }
 
@@ -113,6 +102,7 @@ export class Player {
     this.isAlive = true;
     this.cleared = 0;
     this.malus = 0;
+    this.rotateMalus = 0;
   }
 
   toData() {
@@ -124,6 +114,7 @@ export class Player {
       board: this.board,
       currentPiece: this.currentPiece?.toData() || null,
       malus: this.malus,
+      rotateMalus : this.rotateMalus
     };
   }
 }

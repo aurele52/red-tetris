@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
     const game = games.get(gameId);
     if (game && game.hostId === socket.id) {
       game.mode = mode;
-      // console.log(game.mode);
+      console.log("Game mode " + game.mode);
       if (game.start()) {
         io.to(gameId).emit("gameState", game.getState());
       }
