@@ -161,9 +161,4 @@ export class Game {
       players: [...this.players],
     };
   }
-
-  getOpponnentIds(currentPlayerId) {
-    return this.players.filter(player => player.id !== currentPlayerId)
-    .map(player => player.id);
-  }
 }
