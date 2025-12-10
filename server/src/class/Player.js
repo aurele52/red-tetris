@@ -20,7 +20,6 @@ export class Player {
   malus;
   cleared;
   random;
-  store;
   totScore;
   stored;
 
@@ -34,13 +33,11 @@ export class Player {
     this.malus = 0;
     this.cleared = 0;
     this.random = random;
-    this.store = null;
     this.totScore = 0;
     this.stored = null;
   }
 
   store() {
-    console.log("yessssssssssssss");
     if (!this.stored) {
       this.stored = JSON.parse(JSON.stringify(this.currentPiece));
       let kinds = [0, 1, 2, 3, 4, 5, 6];

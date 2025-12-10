@@ -27,6 +27,7 @@ function App() {
     });
 
     newSocket.on("gameState", (state) => {
+      console.log(state)
       setGameState(state);
       if (state && state.players.length > 1) {
         const alivePlayer = state.players.filter((e) => e.isAlive === true);
