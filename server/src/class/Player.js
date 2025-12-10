@@ -23,7 +23,7 @@ export class Player {
   totScore;
   stored;
 
-  constructor(id, name, random) {
+  constructor(id, name, random, mode) {
     this.id = id;
     this.name = name;
     this.board = this.createEmptyBoard();
@@ -106,6 +106,7 @@ export class Player {
       row.some((cell) => cell === EMPTY_KIND),
     );
     const linesCleared = this.board.length - newBoard.length;
+
     this.cleared += linesCleared;
 
     this.score += linesCleared * 100;

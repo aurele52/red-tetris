@@ -110,15 +110,17 @@ export class Game {
           if (id != opponnentId) opponnent.malus += player.cleared;
             });
           });
+          break;
         case 1:
-            this.players.forEach((player, index) => {
+          this.players.forEach((player, index) => {
             this.players.forEach((opponnent, opponnentIndex) => {
             if (index != opponnentIndex && player.cleared) {
-              this.handleAction(opponnent.id, "RotateCW");
+              this.applyMove(opponnent, "RotateCW");
             }
           });
             player.cleared = 0;  
           });
+          break;
     }
     this.checkGameOver();
   }
@@ -145,25 +147,27 @@ export class Game {
     this.players.forEach((player) => {
       player.malus = 0;
     });
-
     switch (this.mode) {
-      case 0:
-        this.players.forEach((player, id) => {
-        this.players.forEach((toAdd, toAddId) => {
-        if (id != toAddId) toAdd.malus += player.cleared;
+        case 0:
+          this.players.forEach((player, id) => {
+          this.players.forEach((opponnent, opponnentId) => {
+          if (id != opponnentId) opponnent.malus += player.cleared;
+            });
           });
-        });
-      case 1:
-        this.players.forEach((player, index) => {
-        this.players.forEach((opponnent, opponnentIndex) => {
-          if (index != opponnentIndex && player.cleared) {
-            this.handleAction(opponnent.id, "RotateCW");
-          }
-        });
-        player.cleared = 0;  
-        });
-      }
+          break;
+        case 1:
+            this.players.forEach((player, index) => {
+            this.players.forEach((opponnent, opponnentIndex) => {
+            if (index != opponnentIndex && player.cleared) {
+              applyMove(opponnent, "RotateCW");
+            }
+          });
+            player.cleared = 0;  
+          });
+          break;
+    }
     this.checkGameOver();
+    console.log(this.players)
 
     return test;
   }
