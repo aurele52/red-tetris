@@ -8,7 +8,7 @@ const debugLevel = {
   FULL: 2,
 };
 
-let toggle = debugLevel.FULL;
+let toggle = debugLevel.OFF;
 
 export class Player {
   id;
@@ -20,6 +20,8 @@ export class Player {
   malus;
   cleared;
   random;
+  store;
+  totScore;
   stored;
 
   constructor(id, name, random) {
@@ -32,6 +34,8 @@ export class Player {
     this.malus = 0;
     this.cleared = 0;
     this.random = random;
+    this.store = null;
+    this.totScore = 0;
     this.stored = null;
   }
 
