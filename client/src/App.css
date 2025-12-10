@@ -40,3 +40,236 @@
 .read-the-docs {
   color: #888;
 }
+
+
+
+/* Define the keyframes for the flash effect */
+@keyframes flashWhite {
+  0% {
+    background-color: transparent; /* Start with the original background color */
+  }
+  50% {
+    background-color: white; /* Flash white at the halfway point */
+  }
+  100% {
+    background-color: transparent; /* Return to original color */
+  }
+}
+
+/* Class that will trigger the flash effect */
+.flash {
+  animation: flashWhite 0.2s ease-out;
+}
+
+
+
+
+:root {
+  --background-color: #010b20;
+  --headline-color: #ffd500;
+  --outline-red: #ff0055;
+  --outline-blue: #0055ff;
+  --outline-black: #000000;
+  --button-bg-color: #111111;
+  --button-hover-color: #ffd500;
+  --button-text-color: #fff;
+  --font-family: 'Press Start 2P', monospace;
+  --fallback-font: 'Courier New', monospace;
+  --shadow-offset-small: 4px;
+  --shadow-offset-large: 8px;
+  --button-padding: 16px 32px;
+  --button-font-size: 20px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background-color);
+  color: #fff;
+  font-family: var(--font-family), var(--fallback-font);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: auto;
+  text-align: center;
+  padding-top: 50px;
+}
+
+
+.header {
+  color: var(--headline-color);
+  text-align: center;
+  padding: 10px;
+  font-size: clamp(5rem, 12vw, 8rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  text-shadow: 
+    var(--shadow-offset-small) var(--shadow-offset-small) 0px var(--outline-red),
+    var(--shadow-offset-large) var(--shadow-offset-large) 0px var(--outline-blue),
+    0 0 12px var(--outline-black);
+  flex-shrink: 0;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: clamp(5rem, 12vw, 8rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--headline-color);
+  font-weight: 800;
+  text-shadow: 
+    var(--shadow-offset-small) var(--shadow-offset-small) 0px var(--outline-red),
+    var(--shadow-offset-large) var(--shadow-offset-large) 0px var(--outline-blue),
+    0 0 12px var(--outline-black);
+  -webkit-font-smoothing: none;
+  image-rendering: pixelated;
+  text-rendering: optimizeLegibility;
+}
+
+.subtitle {
+  font-size: 2rem;
+  margin-top: 1em;
+  color: #ddd;
+  text-transform: uppercase;
+}
+
+.subtitle span {
+  color: var(--headline-color);
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
+
+button {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 15px 30px;
+  border-radius: 8px;
+  border: 3px solid #FFD500;
+  color: #FFD500;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 10px;
+}
+
+button:hover {
+  background-color: #0055ff;
+  color: #1a1a1a;
+  border-color: #ff0055;
+  box-shadow: 0px 0px 20px 5px rgba(255, 213, 0, 0.75);
+}
+
+button:active {
+  background-color: #FF5733;
+  border-color: #ff0055;
+  box-shadow: 0px 0px 10px 3px rgba(255, 87, 51, 0.75);
+}
+
+button.small {
+  font-size: 1rem;
+  padding: 10px 20px;
+}
+
+
+.winner-info {
+  font-size: 1.2rem;
+  color: #2ecc71;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.score-container {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-top: 40px;
+  text-align: center;
+  background-color: var(--score-bg-color);
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+}
+
+.player-board-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  padding: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-top: 50px;
+  width: 100%;
+  height: 100%;
+}
+
+.player-board-container.multi-players {
+  flex-direction: row;
+  justify-content: center;
+  gap: 15%;
+}
+
+.player-info {
+  background-color: var(--player-card-bg);
+  padding: 15px;
+  border: 1px solid var(--player-card-border);
+  border-radius: 8px;
+  width: 220px;
+  text-align: center;
+  transition: background-color 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-info:hover {
+  background-color: var(--player-card-hover-bg);
+}
+
+.player-name {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.player-score {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.players-list {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.players-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.players-list li {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.players-list h3 {
+  font-size: 1.4rem;
+  color: var(--headline-color);
+}
+
+p {
+  font-weight: 600;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  text-align: center;
+  color: #fff;
+}

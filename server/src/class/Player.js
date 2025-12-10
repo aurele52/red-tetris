@@ -2,14 +2,6 @@ import { applyMove } from "../domain/ApplyMove.js";
 import { EMPTY_KIND } from "../types/types.js";
 import { Piece } from "./Piece.js";
 
-const debugLevel = {
-  OFF: 0,
-  DEBUG: 1,
-  FULL: 2,
-};
-
-let toggle = debugLevel.OFF;
-
 export class Player {
   id;
   name;
@@ -65,8 +57,6 @@ export class Player {
   }
 
   spawnPiece() {
-    if (toggle == debugLevel.FULL) console.log(this.name + " in spawn piece");
-
     let kinds = [0, 1, 2, 3, 4, 5, 6];
     this.currentPiece = new Piece(
       kinds[Math.floor(this.random() * kinds.length)],
@@ -81,8 +71,6 @@ export class Player {
   }
 
   lockPiece() {
-    if (toggle == debugLevel.FULL) console.log(this.name + " in lock piece");
-
     if (!this.currentPiece) return;
 
     const newBoard = this.board.map((row) => [...row]);
@@ -100,8 +88,6 @@ export class Player {
   }
 
   clearLines() {
-    if (toggle == debugLevel.FULL) console.log(this.name + " in clear line");
-
     const newBoard = this.board.filter((row) =>
       row.some((cell) => cell === EMPTY_KIND),
     );

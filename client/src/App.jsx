@@ -4,6 +4,8 @@ import BoardView from "./components/Board";
 import Menu from "./components/Menu";
 import Score from "./components/Score";
 import { addMalusToBoard, addPieceBoard } from "./selector";
+import "./App.css" 
+import FlashComponent from "./components/test";
 
 function App() {
   const [socket, setSocket] = useState(null);
@@ -12,10 +14,26 @@ function App() {
   const [myPlayerId, setMyPlayerId] = useState("");
   const [winner, setWinner] = useState(null);
   const [error, setError] = useState(null);
+  const [malus, setMalus] = useState(null);
 
   const pathParts = window.location.pathname.split("/").filter(Boolean); // enlève les "" au début
   const gameId = pathParts[0];
   const playerName = pathParts[1];
+
+  const [isFlashing, setIsFlashing] = useState(false);
+
+  useEffect(() =>{
+    if (gameState) {
+    let tmp = gameState.players.map((pl) => pl.malus)
+    if (JSON.stringify(tmp) !== JSON.stringify(malus)) {
+      setMalus(tmp);
+      if (tmp.filter((m) => (m !== 0)).length !== 0) {
+      setIsFlashing(true);
+      setTimeout(() => {
+        setIsFlashing(false);
+      }, 500);
+    }} }
+  }, [gameState])
 
   useEffect(() => {
     const newSocket = io("http://localhost:3000");
@@ -27,9 +45,10 @@ function App() {
     });
 
     newSocket.on("gameState", (state) => {
-      console.log(state)
       setGameState(state);
+
       if (state && state.players.length > 1) {
+
         const alivePlayer = state.players.filter((e) => e.isAlive === true);
         if (alivePlayer.length == 1) setWinner(alivePlayer[0].name);
       }
@@ -105,26 +124,29 @@ function App() {
   if (error) return <>{error}</>;
 
   return (
-    <div>
-      <h1>Tetris Multiplayer</h1>
-      {winner && <>The Last Winner is {winner}</>}
+    <div className={`flashable-container ${isFlashing ? "flash" : ""}`}>
+      <header className="header">
+        <h1>Tetris Multiplayer</h1>
+      </header>
+
       {(gameState && !gameState.isStarted) && (
-        <Score
-          playersScore={gameState.players.map((p) => ({
-            player: p.name,
-            score: p.totScore,
-          }))}
-        />
+        <div classname="score-container">
+          <Score
+            playersScore={gameState.players.map((p) => ({
+              player: p.name,
+              score: p.totScore,
+            }))}
+          />
+        </div>
       )}
+  
+      {!joined ? <div>Try Another Url</div> : (gameState && !gameState.isStarted)&&<Menu gameId={gameId} socket={socket} isHost={isHost}/>}
 
-      {!joined ? <div>Try Another Url</div> : <Menu gameId={gameId} socket={socket} isHost={isHost}/>}
-
-      <>
+      <section className={`player-board-container ${gameState?.players.length > 1 ? 'multi-players' : ''}`}>
         {gameState?.isStarted &&
           gameState?.players.map((player) => (
-            <div key={player.id}>
-              <p>{player.name}</p>
-              <p>{player.score}</p>
+            <div key={player.id} className="player-info">
+              <p className="player-name">{player.name}</p>
               <BoardView
                 board={
                   player.currentPiece
@@ -137,16 +159,16 @@ function App() {
               />
             </div>
           ))}
-      </>
+      </section>
 
       {gameState && !gameState.isStarted && gameState.players.length > 0 && (
-        <div>
+        <div className="players-list">
           <h3>Players ({gameState.players.length}):</h3>
           <ul>
             {gameState.players.map((p) => (
-              <li key={p.id}>
+              <p key={p.id}>
                 {p.name} {p.id === gameState.hostId && "(Host)"}
-              </li>
+              </p>
             ))}
           </ul>
         </div>
