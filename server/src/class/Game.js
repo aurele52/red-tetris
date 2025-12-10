@@ -31,7 +31,7 @@ export class Game {
   addPlayer(playerId, playerName) {
     if (this.isStarted) return false;
 
-    const player = new Player(playerId, playerName, this.randq, this);
+    const player = new Player(playerId, playerName, this.randq, this.mode, this);
     this.players.push(player);
 
     if (!this.hostId) {
@@ -137,27 +137,11 @@ export class Game {
 
     const player = this.players.find((play) => playerId === play.id);
     if (!player || !player.isAlive || !player.currentPiece) return false;
+
     let test = applyMove(player, action);
     this.players.forEach((player) => {
       player.malus = 0;
     });
-
-    switch (this.mode) {
-      case 0:
-        this.players.forEach((player, id) => {
-        this.players.forEach((toAdd, toAddId) => {
-        if (id != toAddId) toAdd.malus += player.cleared;
-          });
-        });
-      case 1:
-        this.players.forEach((player, index) => {
-        this.players.forEach((opponnent, opponnentIndex) => {
-          if (index != opponnentIndex && player.cleared) {
-            this.handleAction(opponnent.id, "RotateCW");
-          }
-        });
-        player.cleared = 0;  
-        });
 
     this.checkGameOver();
 
