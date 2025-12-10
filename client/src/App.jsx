@@ -96,7 +96,7 @@ function App() {
           handleAction("MoveLeft");
           e.preventDefault();
           break;
-        case "S":
+        case "s":
           console.log("S pressed");
           handleAction("Store");
           e.preventDefault();

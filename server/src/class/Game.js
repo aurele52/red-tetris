@@ -108,9 +108,9 @@ export class Game {
         if (id != toAddId) toAdd.malus += player.cleared;
       });
     });
-    this.players.forEach((player, ind) => {
+    this.players.forEach((player, id) => {
       this.players.forEach((toAdd, toAddId) => {
-        if (id != toAddId && player.cleared) handleAction(toAdd., "RotateCW");
+        if (id != toAddId && player.cleared) handleAction(toAdd.id, "RotateCW");
       });
     });
     this.checkGameOver();

@@ -20,7 +20,7 @@ export class Player {
   malus;
   cleared;
   random;
-  store;
+  stored;
 
   constructor(id, name, random) {
     this.id = id;
@@ -32,26 +32,26 @@ export class Player {
     this.malus = 0;
     this.cleared = 0;
     this.random = random;
-    this.store = null;
+    this.stored = null;
   }
 
   store() {
     console.log("yessssssssssssss");
-    if (!this.store) {
-      this.store = JSON.parse(JSON.stringify(currentPiece));
+    if (!this.stored) {
+      this.stored = JSON.parse(JSON.stringify(this.currentPiece));
       let kinds = [0, 1, 2, 3, 4, 5, 6];
       this.currentPiece = new Piece(
         kinds[Math.floor(this.random() * kinds.length)],
-        currentPiece.x,
-        currentPiece.y,
+        this.currentPiece.x,
+        this.currentPiece.y,
       );
       if (this.currentPiece && !this.currentPiece.isValidPosition(this.board)) {
         this.isAlive = false;
       }
     } else {
-      let tmp = JSON.parse(JSON.stringify(this.store));
-      this.store.kind = JSON.parse(JSON.stringify(currentPiece.kind));
-      this.store.shape = JSON.parse(JSON.stringify(currentPiece.shape));
+      let tmp = JSON.parse(JSON.stringify(this.stored));
+      this.stored.kind = JSON.parse(JSON.stringify(this.currentPiece.kind));
+      this.stored.shape = JSON.parse(JSON.stringify(this.currentPiece.shape));
       this.currentPiece.kind = JSON.parse(JSON.stringify(tmp.kind));
       this.currentPiece.shape = JSON.parse(JSON.stringify(tmp.shape));
     }
