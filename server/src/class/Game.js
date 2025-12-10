@@ -142,11 +142,22 @@ export class Game {
       player.malus = 0;
     });
 
-    this.players.forEach((player, id) => {
-      this.players.forEach((toAdd, toAddId) => {
+    switch (this.mode) {
+      case 0:
+        this.players.forEach((player, id) => {
+        this.players.forEach((toAdd, toAddId) => {
         if (id != toAddId) toAdd.malus += player.cleared;
-      });
-    });
+          });
+        });
+      case 1:
+        this.players.forEach((player, index) => {
+        this.players.forEach((opponnent, opponnentIndex) => {
+          if (index != opponnentIndex && player.cleared) {
+            this.handleAction(opponnent.id, "RotateCW");
+          }
+        });
+        player.cleared = 0;  
+        });
 
     this.checkGameOver();
 
