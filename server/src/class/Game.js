@@ -103,16 +103,23 @@ export class Game {
     this.players.forEach((player) => {
       player.malus = 0;
     });
-    this.players.forEach((player, id) => {
-      this.players.forEach((toAdd, toAddId) => {
-        if (id != toAddId) toAdd.malus += player.cleared;
-      });
-    });
-    this.players.forEach((player, ind) => {
-      this.players.forEach((toAdd, toAddId) => {
-        if (id != toAddId && player.cleared) handleAction(toAdd., "RotateCW");
-      });
-    });
+    switch (this.mode) {
+        case 0:
+          this.players.forEach((player, id) => {
+          this.players.forEach((opponnent, opponnentId) => {
+          if (id != opponnentId) opponnent.malus += player.cleared;
+            });
+          });
+        case 1:
+            this.players.forEach((player, index) => {
+            this.players.forEach((opponnent, opponnentIndex) => {
+            if (index != opponnentIndex && player.cleared) {
+              this.handleAction(opponnent.id, "RotateCW");
+            }
+          });
+            player.cleared = 0;  
+          });
+    }
     this.checkGameOver();
   }
 
@@ -139,11 +146,22 @@ export class Game {
       player.malus = 0;
     });
 
-    this.players.forEach((player, id) => {
-      this.players.forEach((toAdd, toAddId) => {
+    switch (this.mode) {
+      case 0:
+        this.players.forEach((player, id) => {
+        this.players.forEach((toAdd, toAddId) => {
         if (id != toAddId) toAdd.malus += player.cleared;
-      });
-    });
+          });
+        });
+      case 1:
+        this.players.forEach((player, index) => {
+        this.players.forEach((opponnent, opponnentIndex) => {
+          if (index != opponnentIndex && player.cleared) {
+            this.handleAction(opponnent.id, "RotateCW");
+          }
+        });
+        player.cleared = 0;  
+        });
 
     this.checkGameOver();
 
@@ -157,10 +175,5 @@ export class Game {
       hostId: this.hostId,
       players: [...this.players],
     };
-  }
-
-  getOpponnentIds(currentPlayerId) {
-    return this.players.filter(player => player.id !== currentPlayerId)
-    .map(player => player.id);
   }
 }
