@@ -8,7 +8,7 @@ const debugLevel = {
   FULL:2
 }
 
-let toggle = debugLevel.FULL;
+let toggle = debugLevel.OFF;
 
 export class Player {
   id;
