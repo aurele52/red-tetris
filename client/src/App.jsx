@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import BoardView from "./components/Board";
 import Menu from "./components/Menu";
+import Score from "./components/Score";
 import { addMalusToBoard, addPieceBoard } from "./selector";
 
 function App() {
@@ -106,16 +107,16 @@ function App() {
     <div>
       <h1>Tetris Multiplayer</h1>
       {winner && <>The Last Winner is {winner}</>}
-      {!gameState?.isStarted && (
+      {(gameState && !gameState.isStarted) && (
         <Score
           playersScore={gameState.players.map((p) => ({
-            player: player.name,
-            score: player.totScore,
+            player: p.name,
+            score: p.totScore,
           }))}
         />
       )}
 
-      {!joined ? <div>Try Another Url</div> : <Menu gameId={gameId} />}
+      {!joined ? <div>Try Another Url</div> : <Menu gameId={gameId} socket={socket} isHost={isHost}/>}
 
       <>
         {gameState?.isStarted &&

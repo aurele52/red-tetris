@@ -131,7 +131,7 @@ export class Game {
       this.stop();
       if (alivePlayers.length === 1) {
         let toChange = this.players.findIndex((p) => (p.id === alivePlayers[0].id))
-        alivePlayers[toChange].totScore += 1;
+        this.players[toChange].totScore += 1;
       }
     }
   }
@@ -162,7 +162,7 @@ export class Game {
         });
         player.cleared = 0;  
         });
-
+      }
     this.checkGameOver();
 
     return test;

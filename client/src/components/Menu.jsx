@@ -1,4 +1,6 @@
-export default function Menu({ gameId }) {
+import { useState } from "react";
+
+export default function Menu({ gameId, socket, isHost }) {
   const [mode, setMode] = useState(0);
 
   const handleStart = () => {
@@ -24,7 +26,7 @@ export default function Menu({ gameId }) {
       </p>
       {isHost && (
         <div>
-          <button onClick={handleStart} disabled={gameState?.isStarted}>
+          <button onClick={handleStart}>
             Start Game
           </button>
           <button onClick={handleMode}>Choose Mode : {mode}</button>
