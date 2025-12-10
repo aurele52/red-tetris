@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import BoardView from "./components/Board";
+import Menu from "./components/Menu";
 import { addMalusToBoard, addPieceBoard } from "./selector";
 
 function App() {
@@ -10,7 +11,6 @@ function App() {
   const [myPlayerId, setMyPlayerId] = useState("");
   const [winner, setWinner] = useState(null);
   const [error, setError] = useState(null);
-  const [mode, setMode] = useState(0);
 
   const pathParts = window.location.pathname.split("/").filter(Boolean); // enlève les "" au début
   const gameId = pathParts[0];
@@ -56,26 +56,10 @@ function App() {
     }
   }, [socket, joined, gameId, playerName]);
 
-  const handleStart = () => {
-    if (socket) {
-      socket.emit("startGame", { gameId, mode });
-    }
-  };
-
-  const handleRestart = () => {
-    if (socket) {
-      socket.emit("restartGame", { gameId });
-    }
-  };
-
   const handleAction = (action) => {
     if (socket) {
       socket.emit("action", { gameId, action });
     }
-  };
-
-  const handleMode = () => {
-    setMode((mode + 1) % 2);
   };
 
   useEffect(() => {
@@ -88,7 +72,6 @@ function App() {
           e.preventDefault();
           break;
         case "S":
-          console.log("S pressed");
           handleAction("Store");
           e.preventDefault();
           break;
@@ -122,26 +105,16 @@ function App() {
     <div>
       <h1>Tetris Multiplayer</h1>
       {winner && <>The Last Winner is {winner}</>}
-
-      {!joined ? (
-        <div>Try Another Url</div>
-      ) : (
-        <div>
-          <p>
-            Game ID: <strong>{gameId}</strong>
-          </p>
-          {isHost && (
-            <div>
-              <button onClick={handleStart} disabled={gameState?.isStarted}>
-                Start Game
-              </button>
-              <button onClick={handleMode}>Choose Mode : {mode}</button>
-              <button onClick={handleRestart}>Restart Game</button>
-            </div>
-          )}
-          {!isHost && <p>Waiting for host to start...</p>}
-        </div>
+      {!gameState?.isStarted && (
+        <Score
+          playersScore={gameState.players.map((p) => ({
+            player: player.name,
+            score: player.totScore,
+          }))}
+        />
       )}
+
+      {!joined ? <div>Try Another Url</div> : <Menu gameId={gameId} />}
 
       <>
         {gameState?.isStarted &&
