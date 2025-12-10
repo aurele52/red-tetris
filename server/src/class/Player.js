@@ -20,7 +20,6 @@ export class Player {
   malus;
   cleared;
   random;
-  mode;
 
   constructor(id, name, random, mode) {
     this.id = id;
@@ -32,7 +31,6 @@ export class Player {
     this.malus = 0;
     this.cleared = 0;
     this.random = random;
-    this.mode = this.mode;
   }
 
   createEmptyBoard() {
@@ -86,9 +84,7 @@ export class Player {
     );
     const linesCleared = this.board.length - newBoard.length;
 
-    if (this.mode === 0) {
-      this.cleared += linesCleared;
-    }
+    this.cleared += linesCleared;
 
     this.score += linesCleared * 100;
 
