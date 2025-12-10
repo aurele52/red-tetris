@@ -20,7 +20,6 @@ export class Player {
   malus;
   cleared;
   random;
-  rotateMalus;
 
   constructor(id, name, random) {
     this.id = id;
@@ -32,7 +31,6 @@ export class Player {
     this.malus = 0;
     this.cleared = 0;
     this.random = random;
-    this.rotateMalus = false;
   }
 
   createEmptyBoard() {
@@ -102,7 +100,6 @@ export class Player {
     this.isAlive = true;
     this.cleared = 0;
     this.malus = 0;
-    this.rotateMalus = 0;
   }
 
   toData() {
@@ -114,7 +111,6 @@ export class Player {
       board: this.board,
       currentPiece: this.currentPiece?.toData() || null,
       malus: this.malus,
-      rotateMalus : this.rotateMalus
     };
   }
 }
