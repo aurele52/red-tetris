@@ -4,13 +4,18 @@ import BoardView from "./components/Board";
 import { addMalusToBoard, addPieceBoard } from "./selector";
 
 function App() {
+  const modes = {
+    0:"classic",
+    1:"expert",
+  }
+
   const [socket, setSocket] = useState(null);
   const [gameState, setGameState] = useState(null);
   const [joined, setJoined] = useState(false);
   const [myPlayerId, setMyPlayerId] = useState("");
   const [winner, setWinner] = useState(null);
   const [error, setError] = useState(null);
-  const [mode, setMode] = useState("classic");
+  const [mode, setMode] = useState(modes[0]);
 
   const pathParts = window.location.pathname.split("/").filter(Boolean); // enlève les "" au début
   const gameId = pathParts[0];
@@ -75,11 +80,11 @@ function App() {
   };
 
   const handleMode = () => {
-    if (mode === "classic") {
-      setMode("Expert");
+    if (mode === modes[0]) {
+      setMode(modes[1]);
     }
-    else if (mode === "Expert") {
-      setMode("classic");
+    else if (mode === modes[1]) {
+      setMode(modes[0]);
     }
   };
 

@@ -2,6 +2,14 @@ import { applyMove } from "../domain/ApplyMove.js";
 import { EMPTY_KIND } from "../types/types.js";
 import { Piece } from "./Piece.js";
 
+const debugLevel = {
+  OFF:0,
+  DEBUG:1,
+  FULL:2
+}
+
+let toggle = debugLevel.FULL;
+
 export class Player {
   id;
   name;
@@ -14,10 +22,10 @@ export class Player {
   cleared;
   random;
 
-  constructor(id, name, random, game) {
+
+  constructor(id, name, random) {
     this.id = id;
     this.name = name;
-    this.game = game;
     this.board = this.createEmptyBoard();
     this.currentPiece = null;
     this.score = 0;
@@ -34,7 +42,8 @@ export class Player {
   }
 
   spawnPiece() {
-    console.log("in spawn piece");
+    if (toggle == debugLevel.FULL)
+      console.log(this.name + " in spawn piece");
 
     let kinds = [0, 1, 2, 3, 4, 5, 6];
     this.currentPiece = new Piece(
@@ -49,7 +58,8 @@ export class Player {
   }
 
   lockPiece() {
-    console.log("in lock piece");
+    if (toggle == debugLevel.FULL)
+      console.log(this.name + " in lock piece");
 
     if (!this.currentPiece) return;
 
@@ -68,6 +78,9 @@ export class Player {
   }
 
   clearLines() {
+    if (toggle == debugLevel.FULL)
+      console.log(this.name + " in clear line");
+
     const newBoard = this.board.filter((row) =>
       row.some((cell) => cell === EMPTY_KIND),
     );
@@ -79,16 +92,16 @@ export class Player {
     while (newBoard.length < 20) {
       newBoard.unshift(Array(10).fill(EMPTY_KIND));
     }
-    console.log("in clear line");
 
-    if (this.mode === "Expert" && linesCleared > 0) {
-      const opponentIds = this.getOpponentIds(this.id);
-      console.log("in the expert mode iun clear lines");
-      opponentIds.forEach(opponentId => {
-          this.game.handleAction(opponentId, "RotateCW");
-      });
 
-    }
+    // if (this.mode === "Expert") {
+    //   const opponentIds = this.getOpponentIds(this.id);
+    //   console.log("in the expert mode iun clear lines");
+    //   opponentIds.forEach(opponentId => {
+    //       this.game.handleAction(opponentId, "RotateCW");
+    //   });
+
+    // }
 
     this.board = newBoard;
   }
