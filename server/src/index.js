@@ -12,6 +12,12 @@ export const io = new Server(httpServer, {
   },
 });
 
+io.use((socket, next) => {
+  console.log("Socket.IO middleware – socket id:", socket.id);
+  // tu peux vérifier des infos dans socket.handshake ici
+  next();
+});
+
 const games = new Map();
 
 io.on("connection", (socket) => {
@@ -48,7 +54,6 @@ io.on("connection", (socket) => {
 
   socket.on("action", ({ gameId, action }) => {
     const game = games.get(gameId);
-    console.log("recieve " + action);
     if (game && game.handleAction(socket.id, action)) {
       io.to(gameId).emit("gameState", game.getState());
     }
@@ -82,5 +87,6 @@ export function start(port = process.env.PORT || 3000) {
     console.log(`Server running on port ${port}`);
   });
 }
-
+if (process.env.NODE_ENV !== "test") {
 start();
+}

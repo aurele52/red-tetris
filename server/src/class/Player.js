@@ -2,6 +2,17 @@ import { applyMove } from "../domain/ApplyMove.js";
 import { EMPTY_KIND } from "../types/types.js";
 import { Piece } from "./Piece.js";
 
+function  isValidPosition(coords, board) {
+  return coords.every(
+    (coord) =>
+      coord.x >= 0 &&
+      coord.x < board[0].length &&
+      coord.y >= 0 &&
+      coord.y < board.length &&
+      board[coord.y][coord.x] === EMPTY_KIND,
+  );
+}
+
 export class Player {
   id;
   name;
@@ -14,6 +25,7 @@ export class Player {
   random;
   totScore;
   stored;
+  next;
 
   constructor(id, name, random, mode) {
     this.id = id;
@@ -27,27 +39,34 @@ export class Player {
     this.random = random;
     this.totScore = 0;
     this.stored = null;
+    this.next = null;
   }
 
   store() {
     if (!this.stored) {
-      this.stored = JSON.parse(JSON.stringify(this.currentPiece));
+      if (!this.next) return false
+      this.next.x = this.currentPiece.x
+      this.next.y = this.currentPiece.y
+        if (!isValidPosition(this.next.getAbsoluteCoords(), this.board)) {
+          return false
+        }
+      this.stored = this.currentPiece
       let kinds = [0, 1, 2, 3, 4, 5, 6];
-      this.currentPiece = new Piece(
-        kinds[Math.floor(this.random() * kinds.length)],
-        this.currentPiece.x,
-        this.currentPiece.y,
-      );
-      if (this.currentPiece && !this.currentPiece.isValidPosition(this.board)) {
-        this.isAlive = false;
-      }
+      this.currentPiece = this.next
+      this.next = new Piece(kinds[Math.floor(this.random() * kinds.length)]);
+
     } else {
-      let tmp = JSON.parse(JSON.stringify(this.stored));
-      this.stored.kind = JSON.parse(JSON.stringify(this.currentPiece.kind));
-      this.stored.shape = JSON.parse(JSON.stringify(this.currentPiece.shape));
-      this.currentPiece.kind = JSON.parse(JSON.stringify(tmp.kind));
-      this.currentPiece.shape = JSON.parse(JSON.stringify(tmp.shape));
+      this.stored.x = this.currentPiece.x
+      this.stored.y = this.currentPiece.y
+      if (!isValidPosition(this.stored.getAbsoluteCoords(), this.board)) {
+        return false
+      }
+      let tmp = this.stored;
+      this.stored = this.currentPiece;
+      this.currentPiece = tmp
+
     }
+    return true
   }
 
   createEmptyBoard() {
@@ -58,7 +77,12 @@ export class Player {
 
   spawnPiece() {
     let kinds = [0, 1, 2, 3, 4, 5, 6];
-    this.currentPiece = new Piece(
+    if (!this.next)
+      this.next = new Piece(
+        kinds[Math.floor(this.random() * kinds.length)],
+      );
+    this.currentPiece = this.next;
+    this.next = new Piece(
       kinds[Math.floor(this.random() * kinds.length)],
     );
     if (this.currentPiece && !this.currentPiece.isValidPosition(this.board)) {

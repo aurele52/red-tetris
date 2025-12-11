@@ -3,7 +3,7 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: "coverage",
   collectCoverageFrom: [
-    "src/**/*.{js,jsx}", // ➜ tous les fichiers TypeScript de src
+    "src/**/*.{js,jsx}",
   ],
   transform: {
     "^.+\\.jsx?$": "babel-jest",

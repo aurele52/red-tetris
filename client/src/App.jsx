@@ -5,7 +5,6 @@ import Menu from "./components/Menu";
 import Score from "./components/Score";
 import { addMalusToBoard, addPieceBoard } from "./selector";
 import "./App.css" 
-import FlashComponent from "./components/test";
 
 function App() {
   const [socket, setSocket] = useState(null);
@@ -14,7 +13,7 @@ function App() {
   const [myPlayerId, setMyPlayerId] = useState("");
   const [winner, setWinner] = useState(null);
   const [error, setError] = useState(null);
-  const [malus, setMalus] = useState(null);
+  const [scoreF, setScoreF] = useState(null);
 
   const pathParts = window.location.pathname.split("/").filter(Boolean); // enlève les "" au début
   const gameId = pathParts[0];
@@ -24,9 +23,9 @@ function App() {
 
   useEffect(() =>{
     if (gameState) {
-    let tmp = gameState.players.map((pl) => pl.malus)
-    if (JSON.stringify(tmp) !== JSON.stringify(malus)) {
-      setMalus(tmp);
+    let tmp = gameState.players.map((pl) => pl.score)
+    if (JSON.stringify(tmp) !== JSON.stringify(scoreF)) {
+      setScoreF(tmp);
       if (tmp.filter((m) => (m !== 0)).length !== 0) {
       setIsFlashing(true);
       setTimeout(() => {
@@ -130,7 +129,7 @@ function App() {
       </header>
 
       {(gameState && !gameState.isStarted) && (
-        <div classname="score-container">
+        <div>
           <Score
             playersScore={gameState.players.map((p) => ({
               player: p.name,
@@ -147,6 +146,7 @@ function App() {
           gameState?.players.map((player) => (
             <div key={player.id} className="player-info">
               <p className="player-name">{player.name}</p>
+              <p className="player-score">Score : {player.score}</p>
               <BoardView
                 board={
                   player.currentPiece

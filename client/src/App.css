@@ -150,7 +150,6 @@ button {
   font-size: 1.2rem;
   font-weight: bold;
   padding: 15px 30px;
-  border-radius: 8px;
   border: 3px solid #FFD500;
   color: #FFD500;
   background-color: #1a1a1a;
@@ -164,7 +163,7 @@ button {
 button:hover {
   background-color: #0055ff;
   color: #1a1a1a;
-  border-color: #ff0055;
+  border-color: #FFD500;
   box-shadow: 0px 0px 20px 5px rgba(255, 213, 0, 0.75);
 }
 

@@ -115,7 +115,7 @@ export class Game {
           this.players.forEach((player, index) => {
             this.players.forEach((opponnent, opponnentIndex) => {
             if (index != opponnentIndex && player.cleared) {
-              this.applyMove(opponnent, "RotateCW");
+              applyMove(opponnent, "RotateCW");
             }
           });
             player.cleared = 0;  
@@ -139,7 +139,7 @@ export class Game {
   }
 
   handleAction(playerId, action) {
-    if (!this.isStarted) return false;
+    if (!this.isStarted || (this.mode === 0 && action === "Store")) return false;
 
     const player = this.players.find((play) => playerId === play.id);
     if (!player || !player.isAlive || !player.currentPiece) return false;
@@ -167,7 +167,6 @@ export class Game {
           break;
     }
     this.checkGameOver();
-    console.log(this.players)
 
     return test;
   }

@@ -29,7 +29,7 @@ export default function Menu({ gameId, socket, isHost }) {
           <button onClick={handleStart}>
             Start Game
           </button>
-          <button onClick={handleMode}>Choose Mode : {mode}</button>
+          <button onClick={handleMode}>Choose Mode : {mode ? "bonus" : "classic"} </button>
           <button onClick={handleRestart}>Restart Game</button>
         </div>
       )}
